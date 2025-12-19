@@ -16,19 +16,19 @@ pipeline {
     stages {
         stage('Verify Node.js and npm') {
             steps {
-                sh 'node -v'
-                sh 'npm -v'
-                sh 'ng version'
+                bat 'node -v'
+                bat 'npm -v'
+                bat 'ng version'
             }
         }
         stage('Install Dependencies') {
             steps {
-                sh 'npm i'
+                bat 'npm i'
             }
         }
         stage('Build Angular App') {
             steps {
-                sh 'ng build --configuration=production'
+                bat 'ng build --configuration=production'
             }
         }
         stage('Copy App Build') {
@@ -37,13 +37,13 @@ pipeline {
                     if (fileExists(BUILD_DIR)) {
                         echo "🚀 Deploying build to ${DEPLOY_DIR}..."
                         // Ignore errors if DEPLOY_DIR does not exist
-                        sh "rm -rf ${DEPLOY_DIR} || true"
+                        bat "rm -rf ${DEPLOY_DIR} || true"
 
                         // Create the deployment directory
-                        sh "mkdir -p ${DEPLOY_DIR}"
+                        bat "mkdir -p ${DEPLOY_DIR}"
 
                         // Copy build artifacts
-                        sh "cp -r ${BUILD_DIR}/* ${DEPLOY_DIR}/"
+                        bat "cp -r ${BUILD_DIR}/* ${DEPLOY_DIR}/"
                         echo '✅ Deployment complete.'
                    } else {
                         error "❌ Build directory not found: ${BUILD_DIR}"
@@ -58,7 +58,7 @@ pipeline {
                     usernameVariable: 'DOCKER_USER',
                     passwordVariable: 'DOCKER_PASS'
                 )]) {
-                    sh """
+                    bat """
                       docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} .
                       echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
                       docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
@@ -69,7 +69,7 @@ pipeline {
     } // end of stages
     post {
         always {
-            sh "docker logout || true"
+            bat "docker logout || true"
         }
         success {
             echo '✅ Build and Deployment Successful!'
