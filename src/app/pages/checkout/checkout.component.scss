@@ -1,0 +1,29 @@
+.review-order-table.mat-mdc-table {
+    display: block;
+    overflow-x:auto;
+    .mat-mdc-row, .mat-mdc-header-row {
+        display: flex;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        align-items: center;
+        min-height: 48px;
+        padding: 0 24px;
+        min-width: 760px;
+    }
+    .mat-mdc-row{
+        min-height: 60px;
+    }
+    .mat-mdc-cell, .mat-mdc-header-cell {
+        flex: 1;
+        overflow: hidden;
+        word-wrap: break-word;
+    }
+    .mat-mdc-header-cell {
+        font-size: 14px;
+    }
+    .mat-mdc-cell{
+        img{
+            width: 60px;
+        }
+    }
+}

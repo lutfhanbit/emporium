@@ -1,0 +1,42 @@
+<div class="p-2">
+    <mat-card> 
+        <div fxLayout="row wrap" fxLayoutAlign="space-between center" class="w-100 p-3">
+            <h2>Transactions List</h2>  
+        </div>
+        <mat-divider></mat-divider>
+        <div class="mat-mdc-table admin-table">
+            <div class="mat-mdc-header-row">
+                <div class="mat-mdc-header-cell">OrderId</div>
+                <div class="mat-mdc-header-cell">TransactionId</div>
+                <div class="mat-mdc-header-cell">Date</div>
+                <div class="mat-mdc-header-cell">Payment Method</div>
+                <div class="mat-mdc-header-cell">Status</div>
+                <div class="mat-mdc-header-cell">Amount</div>
+                <div class="mat-mdc-header-cell"></div>
+            </div>
+            <div *ngFor="let tran of transactions | paginate: { itemsPerPage: count, currentPage: page }" class="mat-mdc-row">
+                <div class="mat-mdc-cell"><span class="order">{{tran.orderId}}</span></div>
+                <div class="mat-mdc-cell">{{tran.transactionId}}</div>
+                <div class="mat-mdc-cell">{{tran.date}}</div>
+                <div class="mat-mdc-cell">{{tran.paymentMethod}}</div>
+                <div class="mat-mdc-cell">{{tran.status}}</div>
+                <div class="mat-mdc-cell">{{tran.amount}}</div>     
+                <div class="mat-mdc-cell">
+                    <div class="p-2 actions">          
+                        <button mat-mini-fab color="primary" matTooltip="View">
+                            <mat-icon>remove_red_eye</mat-icon>
+                        </button> 
+                    </div>
+                </div>      
+            </div>
+        </div>
+    </mat-card>
+
+    <div *ngIf="transactions.length > 0" fxLayout="row wrap">
+        <div fxFlex="100"> 
+            <mat-card class="text-center">           
+                <pagination-controls class="product-pagination" [autoHide]="true" [maxSize]="5" (pageChange)="onPageChanged($event)"></pagination-controls>
+            </mat-card>
+        </div>
+    </div>
+</div>

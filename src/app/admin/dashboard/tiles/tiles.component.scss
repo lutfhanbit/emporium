@@ -1,0 +1,19 @@
+.tile{
+    text-align: right;
+    .mat-icon{
+        position: absolute;
+        left: 4px;
+        top: 8px;
+        line-height: 54px;
+        font-size: 54px;
+        width: 54px;
+        height: 54px;
+        opacity: 0.3;
+    }
+    h2{
+        font-weight: 500;
+    }
+    p{
+        text-transform: uppercase;
+    }
+}

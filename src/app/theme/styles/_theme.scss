@@ -1,0 +1,42 @@
+@use '@angular/material' as mat;  
+@import './variables'; 
+$custom-typography: mat.define-typography-config( 
+    $body-1: mat.define-typography-level(14px, 20px, 400, $font-family),
+    $button: mat.define-typography-level(14px, 22px, 600, $font-family, $letter-spacing: 0.02em),
+);
+@include mat.all-component-typographies($custom-typography); 
+@include mat.core(); 
+
+@import 'theme-reset';
+.app{
+    &.green{
+        @import "skins/grey";
+        @include mat.all-component-colors($grey-theme);
+        @include theme-reset($grey-theme);
+    }
+    &.blue{
+        @import "skins/blue";
+        @include mat.all-component-colors($blue-theme);
+        @include theme-reset($blue-theme);
+    }
+    &.red{
+        @import "skins/red";
+        @include mat.all-component-colors($red-theme);
+        @include theme-reset($red-theme);
+    }
+    &.pink{
+        @import "skins/pink";
+        @include mat.all-component-colors($pink-theme);
+        @include theme-reset($pink-theme);
+    }
+    &.purple{
+        @import "skins/purple";
+        @include mat.all-component-colors($purple-theme);
+        @include theme-reset($purple-theme);
+    }
+    // &.grey{
+    //     @import "skins/grey";
+    //     @include mat.all-component-colors($grey-theme);
+    //     @include theme-reset($grey-theme);
+    // }
+}

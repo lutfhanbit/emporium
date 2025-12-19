@@ -1,0 +1,51 @@
+$filter-sidenav-width: 280px;
+
+.filter-sidenav {
+    width: $filter-sidenav-width;
+    border: 0 !important; 
+    .mat-expansion-panel-header-title {
+        text-transform: uppercase;
+    }
+    .mat-accordion {
+        display: block;
+        width: $filter-sidenav-width;
+    }
+}
+.filter-row{
+    background: #fff;
+    padding: 4px 12px;
+}
+.all-products{
+    min-height: 400px;
+    padding: 2px;
+    overflow: hidden;
+    &.p-left{
+        padding-left: 16px;
+    }
+}
+
+.products-wrapper{
+    margin: 8px -8px;
+    .col{
+        padding: 8px;
+    }
+}
+
+.categories-wrapper{
+    position: relative;
+    height: 300px;
+}
+
+.filter-buttons{
+    button{
+        min-width: 36px;
+        margin: 0 6px 10px 0;
+        padding: 0;
+    }
+}
+
+.filter-price { 
+    .mat-mdc-slider {
+        min-width: 106px;
+    }
+}

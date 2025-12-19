@@ -1,0 +1,49 @@
+<div class="p-2">
+    <mat-card> 
+        <div fxLayout="row wrap" fxLayoutAlign="space-between center" class="w-100 p-3">
+            <h2>Support Tickets</h2>   
+        </div>
+        <mat-divider></mat-divider>
+        <div class="mat-mdc-table admin-table">
+            <div class="mat-mdc-header-row"> 
+                <div class="mat-mdc-header-cell">Ticket</div>
+                <div class="mat-mdc-header-cell">Category</div>
+                <div class="mat-mdc-header-cell">Issue</div>
+                <div class="mat-mdc-header-cell">Item</div>
+                <div class="mat-mdc-header-cell">Customer</div> 
+                <div class="mat-mdc-header-cell">Store</div>
+                <div class="mat-mdc-header-cell">Status</div>  
+                <div class="mat-mdc-header-cell">Date</div>
+                <div class="mat-mdc-header-cell"></div>
+            </div>
+            <div *ngFor="let ticket of tickets | paginate: { itemsPerPage: count, currentPage: page }" class="mat-mdc-row"> 
+                <div class="mat-mdc-cell">{{ticket.code}}</div> 
+                <div class="mat-mdc-cell">{{ ( spportCategories | filterById : ticket.supportCategoryId )?.name }}</div> 
+                <div class="mat-mdc-cell">{{ticket.issue}}</div>
+                <div class="mat-mdc-cell">Order {{ticket.order}}</div>
+                <div class="mat-mdc-cell">{{ticket.customer}}</div> 
+                <div class="mat-mdc-cell">{{ ( stores | filterById : ticket.storeId )?.name }}</div> 
+                <div class="mat-mdc-cell">{{ ( statuses | filterById : ticket.statusId )?.name}}</div> 
+                <div class="mat-mdc-cell">{{ticket.date | date:"dd MMMM, yyyy 'at' HH:mm"}}</div>     
+                <div class="mat-mdc-cell">
+                    <div class="p-2 actions">          
+                        <button mat-mini-fab color="primary" matTooltip="Reply">
+                            <mat-icon>reply_all</mat-icon>
+                        </button>
+                        <button mat-mini-fab color="warn" matTooltip="Delete" class="mx-1" (click)="remove(ticket)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </div>      
+            </div>
+        </div>
+    </mat-card>
+
+    <div *ngIf="tickets.length > 0" fxLayout="row wrap">
+        <div fxFlex="100"> 
+            <mat-card class="text-center">           
+                <pagination-controls class="product-pagination" [autoHide]="true" [maxSize]="5" (pageChange)="onPageChanged($event)"></pagination-controls>
+            </mat-card>
+        </div>
+    </div>
+</div>

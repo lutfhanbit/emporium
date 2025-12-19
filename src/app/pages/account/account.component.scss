@@ -1,0 +1,29 @@
+.account-sidenav{
+    width: 280px;
+    padding: 2px;
+    a {
+        width: 100%;
+        place-content: flex-start;
+        font-weight: 500;
+        height: 42px;
+    } 
+}
+.account-content{
+    min-height: 400px;
+    padding: 2px;
+    overflow: hidden;
+    &.p-left{
+        padding-left: 16px;
+    }
+    .header-row{
+        background: #fff;
+        padding: 0 16px;
+        height: 56px;
+    }
+    .account-wrapper{
+        margin-top: 16px;
+        padding: 16px;
+        background: #fff;
+    }
+}
+

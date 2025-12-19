@@ -1,0 +1,49 @@
+<div class="p-2">
+    <mat-card> 
+        <div fxLayout="row wrap" fxLayoutAlign="space-between center" class="w-100 p-3">
+            <h2>Withdrawal Requests</h2>  
+        </div>
+        <mat-divider></mat-divider>
+        <div class="mat-mdc-table admin-table">
+            <div class="mat-mdc-header-row"> 
+                <div class="mat-mdc-header-cell">Invoice ID</div>
+                <div class="mat-mdc-header-cell">Order IDs</div> 
+                <div class="mat-mdc-header-cell">Store</div>
+                <div class="mat-mdc-header-cell">Amount</div>  
+                <div class="mat-mdc-header-cell">Charges</div>  
+                <div class="mat-mdc-header-cell">Payment</div>  
+                <div class="mat-mdc-header-cell">Date</div>
+                <div class="mat-mdc-header-cell"></div>
+            </div>
+            <div *ngFor="let item of withdrawal | paginate: { itemsPerPage: count, currentPage: page }" class="mat-mdc-row"> 
+                <div class="mat-mdc-cell">{{item.invoiceId}}</div> 
+                <div class="mat-mdc-cell">
+                    <span class="primary-text" *ngFor="let order of item.orderIds; let last=last">{{order}}<span *ngIf="!last">, </span></span>
+                </div> 
+                <div class="mat-mdc-cell">{{ ( stores | filterById : item.storeId )?.name }}</div> 
+                <div class="mat-mdc-cell">${{item.amount.toFixed(2)}}</div> 
+                <div class="mat-mdc-cell">${{item.charges.toFixed(2)}}</div> 
+                <div class="mat-mdc-cell">${{item.payment.toFixed(2)}}</div>  
+                <div class="mat-mdc-cell">{{item.date | date:"dd MMMM, yyyy 'at' HH:mm"}}</div>     
+                <div class="mat-mdc-cell">
+                    <div class="p-2 actions">          
+                        <button mat-mini-fab color="primary" matTooltip="Approve">
+                            <mat-icon>check</mat-icon>
+                        </button>
+                        <button mat-mini-fab color="warn" matTooltip="Reject">
+                            <mat-icon>clear</mat-icon>
+                        </button>
+                    </div>
+                </div>      
+            </div>
+        </div>
+    </mat-card>
+
+    <div *ngIf="withdrawal.length > 0" fxLayout="row wrap">
+        <div fxFlex="100"> 
+            <mat-card class="text-center">           
+                <pagination-controls class="product-pagination" [autoHide]="true" [maxSize]="5" (pageChange)="onPageChanged($event)"></pagination-controls>
+            </mat-card>
+        </div>
+    </div>
+</div>

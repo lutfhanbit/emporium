@@ -1,0 +1,32 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: emporium
+  namespace: binaryit
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: emporium
+  template:
+    metadata:
+      labels:
+        app: emporium
+    spec:
+      containers:
+        - name: emporium
+          image: renderman/emporium:12
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "30m"
+            limits:
+              memory: "2048Mi"
+              cpu: "1"
+          stdin: true 
+          tty: true 
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 80
+      restartPolicy: Always
+      

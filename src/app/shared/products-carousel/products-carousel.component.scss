@@ -1,0 +1,13 @@
+.swiper-container{
+    padding: 16px 2px 2px 2px;
+    .mat-mdc-card {
+        display: block; 
+    }
+    .swiper-slide{
+        text-align: center;
+    }
+}
+.swiper-button-next.swiper-button-disabled, 
+.swiper-button-prev.swiper-button-disabled{
+    pointer-events: auto;
+}

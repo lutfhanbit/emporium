@@ -1,0 +1,20 @@
+<mat-card>
+    <mat-card-header fxLayoutAlign="center center" class="mb-3">                
+        <mat-card-title>Sales Summary (Top Regions)</mat-card-title>
+    </mat-card-header>
+    <div class="w-100 h-300p">
+        <ngx-charts-bar-vertical-2d
+            [scheme]="colorScheme"
+            [results]="sales_summary"
+            [gradient]="gradient"
+            [xAxis]="showXAxis"
+            [yAxis]="showYAxis"
+            [legend]="showLegend"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel"
+            (select)="onSelect($event)">
+        </ngx-charts-bar-vertical-2d>        
+    </div>
+</mat-card>

@@ -1,0 +1,21 @@
+<mat-card class="pb-3">
+    <mat-card-header fxLayoutAlign="center center">                
+        <mat-card-title>Daily Views Stats</mat-card-title>
+    </mat-card-header>
+    <div class="w-100 h-400p">
+        <ngx-charts-line-chart
+            [scheme]="colorScheme"
+            [results]="daily_views_stats"
+            [gradient]="gradient"
+            [xAxis]="showXAxis"
+            [yAxis]="showYAxis"
+            [legend]="showLegend"
+            [showXAxisLabel]="showXAxisLabel"
+            [showYAxisLabel]="showYAxisLabel"
+            [xAxisLabel]="xAxisLabel"
+            [yAxisLabel]="yAxisLabel"
+            [autoScale]="autoScale"
+            (select)="onSelect($event)">
+        </ngx-charts-line-chart>                  
+    </div>
+</mat-card>

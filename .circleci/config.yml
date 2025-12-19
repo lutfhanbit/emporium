@@ -1,0 +1,55 @@
+version: 2.1
+
+# orbs:
+#   node: circleci/node@5.1.1
+
+orbs:
+  browser-tools: circleci/browser-tools@1.4.6
+
+jobs:
+  build_and_test:
+    docker:
+      - image: cimg/node:20.11.0-browsers  
+    steps:
+      - browser-tools/install-chrome
+      - checkout
+      - run: yarn install
+      - run: yarn test      
+    working_directory: ~/app
+  deploy:
+    docker:
+      - image: cimg/node:20.11.0
+    environment:
+      SERVER_NAME: 751244938937.dkr.ecr.ap-southeast-3.amazonaws.com
+      REPO_NAME: amazing
+      IMAGE_NAME: amazing:1.0.0
+    working_directory: ~/app
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 20.10.24
+          # docker_layer_caching: true
+      - run:
+          name: Build and push Docker image
+          command: |
+            echo "$AWS_ECR" | docker login -u $AWS_ECR --password-stdin $SERVER_NAME/$REPO_NAME
+            docker build -t $IMAGE_NAME .
+            docker tag $IMAGE_NAME $SERVER_NAME/$REPO_NAME/$IMAGE_NAME
+            docker push $SERVER_NAME/$REPO_NAME/$IMAGE_NAME
+workflows:
+  on_commit:
+    jobs:
+      - build_and_test:
+          filters:
+            branches:
+              only:
+                - DEV
+                - QA
+      - deploy:
+          requires:
+            - build_and_test
+          filters:
+            branches:
+              only:
+                - DEV
+                - QA

@@ -1,0 +1,46 @@
+<div class="p-2">
+    <mat-card> 
+        <div fxLayout="row wrap" fxLayoutAlign="space-between center" class="w-100 p-3">
+            <h2>Customers List</h2>  
+            <button mat-raised-button color="primary" (click)="openCustomerDialog(null)">Add Customer</button>
+        </div>
+        <mat-divider></mat-divider>
+        <div class="mat-mdc-table admin-table">
+            <div class="mat-mdc-header-row">
+                <div class="mat-mdc-header-cell">Full Name</div>
+                <div class="mat-mdc-header-cell">Username</div> 
+                <div class="mat-mdc-header-cell">Email</div>
+                <div class="mat-mdc-header-cell">Store</div>
+                <div class="mat-mdc-header-cell">Wallet Balance</div>
+                <div class="mat-mdc-header-cell">Revenue</div>
+                <div class="mat-mdc-header-cell"></div>
+            </div>
+            <div *ngFor="let customer of customers | paginate: { itemsPerPage: count, currentPage: page }" class="mat-mdc-row">
+                <div class="mat-mdc-cell">{{customer.firstName}} {{customer.lastName}}</div>
+                <div class="mat-mdc-cell">{{customer.username}}</div>
+                <div class="mat-mdc-cell">{{customer.email}}</div>
+                <div class="mat-mdc-cell">{{ ( stores | filterById : customer.storeId )?.name }}</div> 
+                <div class="mat-mdc-cell">${{customer.walletBalance.toFixed(2)}}</div>
+                <div class="mat-mdc-cell">${{customer.revenue.toFixed(2)}}</div>     
+                <div class="mat-mdc-cell">
+                    <div class="p-2 actions">          
+                        <button mat-mini-fab color="primary" matTooltip="Edit" (click)="openCustomerDialog(customer)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button mat-mini-fab color="warn" matTooltip="Delete" class="mx-1" (click)="remove(customer)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </div>      
+            </div>
+        </div>
+    </mat-card>
+
+    <div *ngIf="customers.length > 0" fxLayout="row wrap">
+        <div fxFlex="100"> 
+            <mat-card class="text-center">           
+                <pagination-controls class="product-pagination" [autoHide]="true" [maxSize]="5" (pageChange)="onPageChanged($event)"></pagination-controls>
+            </mat-card>
+        </div>
+    </div>
+</div>
