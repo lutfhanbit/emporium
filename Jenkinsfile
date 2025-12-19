@@ -9,7 +9,7 @@ pipeline {
     environment {
         BUILD_DIR = 'dist/browser'  // Output folder after Angular build
         DEPLOY_DIR = 'app/html' // Target directory for deployment
-        DOCKER_IMAGE = 'renderman/emporium'
+        DOCKER_IMAGE = 'lutfhanbit/emporium'
         // DOCKER_TAG   = "${BUILD_NUMBER}"
         DOCKER_TAG   = '12'
     }
