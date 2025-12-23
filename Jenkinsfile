@@ -26,6 +26,17 @@ pipeline {
                 sh 'npm i'
             }
         }
+        stage('Security Testing with Snyk') {
+            steps {
+                echo 'Running Snyk security scan...'
+                snykSecurity(
+                    snykInstallation: 'snyk@latest',
+                    snykTokenId: 'snyk-api-token',
+                    failOnIssues: false,
+                    monitorProjectOnBuild: true
+                )
+            }
+        }
         stage('Build Angular App') {
             steps {
                 sh 'ng build --configuration=production'
