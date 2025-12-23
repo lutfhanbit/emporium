@@ -11,7 +11,7 @@ pipeline {
         DEPLOY_DIR = 'app/html' // Target directory for deployment
         DOCKER_IMAGE = 'lutfhanbit/emporium'
         // DOCKER_TAG   = "${BUILD_NUMBER}"
-        DOCKER_TAG   = '12'
+        DOCKER_TAG   = '13'
     }
     stages {
         stage('Verify Node.js and npm') {
