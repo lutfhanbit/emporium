@@ -33,8 +33,40 @@ pipeline {
                     snykInstallation: 'snyk@latest',
                     snykTokenId: 'snyk-api-token',
                     failOnIssues: false,
-                    monitorProjectOnBuild: true
+                    monitorProjectOnBuild: true,
+                    additionalArguments: '--json-file-output=snyk-report.json'
                 )
+            }
+        }
+        stage('Security Report Summary') {
+            steps {
+                script {
+                    echo '📊 Generating Security Report Summary...'
+                    sh '''
+                        if [ -f snyk-report.json ]; then
+                            echo "============================================"
+                            echo "       SNYK SECURITY SCAN SUMMARY"
+                            echo "============================================"
+                            
+                            # Count vulnerabilities by severity
+                            CRITICAL=$(grep -o '"severity":"critical"' snyk-report.json | wc -l || echo 0)
+                            HIGH=$(grep -o '"severity":"high"' snyk-report.json | wc -l || echo 0)
+                            MEDIUM=$(grep -o '"severity":"medium"' snyk-report.json | wc -l || echo 0)
+                            LOW=$(grep -o '"severity":"low"' snyk-report.json | wc -l || echo 0)
+                            
+                            echo ""
+                            echo "🔴 Critical: $CRITICAL"
+                            echo "🟠 High:     $HIGH"
+                            echo "🟡 Medium:   $MEDIUM"
+                            echo "🟢 Low:      $LOW"
+                            echo ""
+                            echo "Total Vulnerabilities: $((CRITICAL + HIGH + MEDIUM + LOW))"
+                            echo "============================================"
+                        else
+                            echo "⚠️  Snyk report file not found"
+                        fi
+                    '''
+                }
             }
         }
         stage('Build Angular App') {
