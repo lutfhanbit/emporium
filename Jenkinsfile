@@ -33,49 +33,8 @@ pipeline {
                     snykInstallation: 'snyk@latest',
                     snykTokenId: 'snyk-api-token',
                     failOnIssues: false,
-                    monitorProjectOnBuild: false
+                    monitorProjectOnBuild: true
                 )
-            }
-        }
-        stage('Security Report Summary') {
-            steps {
-                script {
-                    echo '📊 Generating Security Report Summary...'
-                    sh '''
-                        # Find the latest Snyk report JSON file
-                        REPORT_FILE=$(ls -t *_snyk_report.json 2>/dev/null | head -1)
-                        
-                        if [ -n "$REPORT_FILE" ] && [ -f "$REPORT_FILE" ]; then
-                            echo "============================================"
-                            echo "       SNYK SECURITY SCAN SUMMARY"
-                            echo "============================================"
-                            echo "Report file: $REPORT_FILE"
-                            echo ""
-                            
-                            # Count vulnerabilities by severity
-                            CRITICAL=$(grep -o '"severity":"critical"' "$REPORT_FILE" | wc -l || echo 0)
-                            HIGH=$(grep -o '"severity":"high"' "$REPORT_FILE" | wc -l || echo 0)
-                            MEDIUM=$(grep -o '"severity":"medium"' "$REPORT_FILE" | wc -l || echo 0)
-                            LOW=$(grep -o '"severity":"low"' "$REPORT_FILE" | wc -l || echo 0)
-                            
-                            echo "🔴 Critical: $CRITICAL"
-                            echo "🟠 High:     $HIGH"
-                            echo "🟡 Medium:   $MEDIUM"
-                            echo "🟢 Low:      $LOW"
-                            echo ""
-                            TOTAL=$((CRITICAL + HIGH + MEDIUM + LOW))
-                            echo "📊 Total Vulnerabilities: $TOTAL"
-                            echo "============================================"
-                            
-                            # Optionally fail the build based on severity
-                            if [ $CRITICAL -gt 0 ]; then
-                                echo "⚠️  Warning: Critical vulnerabilities found!"
-                            fi
-                        else
-                            echo "⚠️  Snyk report file not found"
-                        fi
-                    '''
-                }
             }
         }
         stage('Build Angular App') {
