@@ -33,8 +33,7 @@ pipeline {
                     snykInstallation: 'snyk@latest',
                     snykTokenId: 'snyk-api-token',
                     failOnIssues: false,
-                    monitorProjectOnBuild: true,
-                    additionalArguments: '--json-file-output=snyk-report.json'
+                    monitorProjectOnBuild: false
                 )
             }
         }
@@ -43,25 +42,35 @@ pipeline {
                 script {
                     echo '📊 Generating Security Report Summary...'
                     sh '''
-                        if [ -f snyk-report.json ]; then
+                        # Find the latest Snyk report JSON file
+                        REPORT_FILE=$(ls -t *_snyk_report.json 2>/dev/null | head -1)
+                        
+                        if [ -n "$REPORT_FILE" ] && [ -f "$REPORT_FILE" ]; then
                             echo "============================================"
                             echo "       SNYK SECURITY SCAN SUMMARY"
                             echo "============================================"
+                            echo "Report file: $REPORT_FILE"
+                            echo ""
                             
                             # Count vulnerabilities by severity
-                            CRITICAL=$(grep -o '"severity":"critical"' snyk-report.json | wc -l || echo 0)
-                            HIGH=$(grep -o '"severity":"high"' snyk-report.json | wc -l || echo 0)
-                            MEDIUM=$(grep -o '"severity":"medium"' snyk-report.json | wc -l || echo 0)
-                            LOW=$(grep -o '"severity":"low"' snyk-report.json | wc -l || echo 0)
+                            CRITICAL=$(grep -o '"severity":"critical"' "$REPORT_FILE" | wc -l || echo 0)
+                            HIGH=$(grep -o '"severity":"high"' "$REPORT_FILE" | wc -l || echo 0)
+                            MEDIUM=$(grep -o '"severity":"medium"' "$REPORT_FILE" | wc -l || echo 0)
+                            LOW=$(grep -o '"severity":"low"' "$REPORT_FILE" | wc -l || echo 0)
                             
-                            echo ""
                             echo "🔴 Critical: $CRITICAL"
                             echo "🟠 High:     $HIGH"
                             echo "🟡 Medium:   $MEDIUM"
                             echo "🟢 Low:      $LOW"
                             echo ""
-                            echo "Total Vulnerabilities: $((CRITICAL + HIGH + MEDIUM + LOW))"
+                            TOTAL=$((CRITICAL + HIGH + MEDIUM + LOW))
+                            echo "📊 Total Vulnerabilities: $TOTAL"
                             echo "============================================"
+                            
+                            # Optionally fail the build based on severity
+                            if [ $CRITICAL -gt 0 ]; then
+                                echo "⚠️  Warning: Critical vulnerabilities found!"
+                            fi
                         else
                             echo "⚠️  Snyk report file not found"
                         fi
