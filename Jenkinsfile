@@ -37,6 +37,47 @@ pipeline {
                 )
             }
         }
+        stage('Snyk Security Summary') {
+            steps {
+                script {
+                    echo '📊 Fetching Snyk vulnerability summary...'
+                    def snykResult = sh(
+                        script: '''
+                            snyk test --json 2>&1 || true
+                        ''',
+                        returnStdout: true
+                    ).trim()
+                    
+                    try {
+                        def jsonResult = readJSON text: snykResult
+                        def critical = jsonResult.uniqueCount?.critical ?: 0
+                        def high = jsonResult.uniqueCount?.high ?: 0
+                        def medium = jsonResult.uniqueCount?.medium ?: 0
+                        def low = jsonResult.uniqueCount?.low ?: 0
+                        
+                        echo '═══════════════════════════════════════'
+                        echo '🔍 SNYK SECURITY SCAN SUMMARY'
+                        echo '═══════════════════════════════════════'
+                        echo "Critical severity: ${critical}"
+                        echo "High severity: ${high}"
+                        echo "Medium severity: ${medium}"
+                        echo "Low severity: ${low}"
+                        echo '═══════════════════════════════════════'
+                        
+                        // Get project URL if available
+                        if (jsonResult.projectUrl) {
+                            echo "URL Report: ${jsonResult.projectUrl}"
+                        } else {
+                            echo "URL Report: Check Snyk dashboard at https://app.snyk.io"
+                        }
+                        echo '═══════════════════════════════════════'
+                    } catch (Exception e) {
+                        echo "⚠️ Could not parse Snyk results: ${e.message}"
+                        echo "Raw output: ${snykResult}"
+                    }
+                }
+            }
+        }
         stage('Build Angular App') {
             steps {
                 sh 'ng build --configuration=production'
