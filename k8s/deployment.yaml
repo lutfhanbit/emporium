@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: emporium
-          image: lutfhanbit/emporium:12
+          image: lutfhanbit/emporium:24
           resources:
             requests:
               memory: "64Mi"
