@@ -61,30 +61,28 @@ pipeline {
 
         stage('Print Snyk Severity Summary') {
             steps {
-                withCredentials([string(credentialsId: 'snyk-api-token', variable: 'SNYK_TOKEN')]) {
-                    sh '''
-                        echo "📊 Collecting Snyk severity summary..."
+                sh '''
+                    echo "📊 Collecting Snyk severity summary..."
 
-                        snyk test --json > snyk-result.json || true
+                    snyk test --json > snyk-result.json || true
 
-                        CRITICAL=$(jq '[.vulnerabilities[] | select(.severity=="critical")] | length' snyk-result.json)
-                        HIGH=$(jq '[.vulnerabilities[] | select(.severity=="high")] | length' snyk-result.json)
-                        MEDIUM=$(jq '[.vulnerabilities[] | select(.severity=="medium")] | length' snyk-result.json)
-                        LOW=$(jq '[.vulnerabilities[] | select(.severity=="low")] | length' snyk-result.json)
+                    CRITICAL=$(jq '[.vulnerabilities[] | select(.severity=="critical")] | length' snyk-result.json)
+                    HIGH=$(jq '[.vulnerabilities[] | select(.severity=="high")] | length' snyk-result.json)
+                    MEDIUM=$(jq '[.vulnerabilities[] | select(.severity=="medium")] | length' snyk-result.json)
+                    LOW=$(jq '[.vulnerabilities[] | select(.severity=="low")] | length' snyk-result.json)
 
-                        PROJECT_URL=$(jq -r '.uri // empty' snyk-result.json)
+                    PROJECT_URL=$(jq -r '.uri // empty' snyk-result.json)
 
-                        echo "=============================="
-                        echo "🔐 SNYK SECURITY SUMMARY"
-                        echo "Critical severity : $CRITICAL"
-                        echo "High severity     : $HIGH"
-                        echo "Medium severity   : $MEDIUM"
-                        echo "Low severity      : $LOW"
-                        echo "------------------------------"
-                        echo "URL : $PROJECT_URL"
-                        echo "=============================="
-                    '''
-                }
+                    echo "=============================="
+                    echo "🔐 SNYK SECURITY SUMMARY"
+                    echo "Critical severity : $CRITICAL"
+                    echo "High severity     : $HIGH"
+                    echo "Medium severity   : $MEDIUM"
+                    echo "Low severity      : $LOW"
+                    echo "------------------------------"
+                    echo "URL : $PROJECT_URL"
+                    echo "=============================="
+                '''
             }
         }
 
