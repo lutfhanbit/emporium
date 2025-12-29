@@ -64,14 +64,20 @@ pipeline {
                 sh '''
                     echo "📊 Collecting Snyk severity summary..."
 
-                    snyk test --json > snyk-result.json || true
+                    # Cari file report JSON dari Snyk Plugin
+                    SNYK_JSON=$(ls *_snyk_report.json 2>/dev/null | head -n 1)
 
-                    CRITICAL=$(jq '[.vulnerabilities[] | select(.severity=="critical")] | length' snyk-result.json)
-                    HIGH=$(jq '[.vulnerabilities[] | select(.severity=="high")] | length' snyk-result.json)
-                    MEDIUM=$(jq '[.vulnerabilities[] | select(.severity=="medium")] | length' snyk-result.json)
-                    LOW=$(jq '[.vulnerabilities[] | select(.severity=="low")] | length' snyk-result.json)
+                    if [ -z "$SNYK_JSON" ]; then
+                        echo "❌ Snyk JSON report not found"
+                        exit 0
+                    fi
 
-                    PROJECT_URL=$(jq -r '.uri // empty' snyk-result.json)
+                    CRITICAL=$(jq '[.vulnerabilities[] | select(.severity=="critical")] | length' "$SNYK_JSON")
+                    HIGH=$(jq '[.vulnerabilities[] | select(.severity=="high")] | length' "$SNYK_JSON")
+                    MEDIUM=$(jq '[.vulnerabilities[] | select(.severity=="medium")] | length' "$SNYK_JSON")
+                    LOW=$(jq '[.vulnerabilities[] | select(.severity=="low")] | length' "$SNYK_JSON")
+
+                    PROJECT_URL=$(jq -r '.uri // empty' "$SNYK_JSON")
 
                     echo "=============================="
                     echo "🔐 SNYK SECURITY SUMMARY"
