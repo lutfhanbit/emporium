@@ -1,8 +1,7 @@
-kind: Deployment
 apiVersion: apps/v1
+kind: Deployment
 metadata:
   name: emporium
-  namespace: binaryit
 spec:
   replicas: 2
   selector:
@@ -23,10 +22,5 @@ spec:
             limits:
               memory: "2048Mi"
               cpu: "1"
-          stdin: true 
-          tty: true 
-          imagePullPolicy: Always
           ports:
             - containerPort: 80
-      restartPolicy: Always
-      
