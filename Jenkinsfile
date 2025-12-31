@@ -28,13 +28,12 @@ pipeline {
         }
         stage('Security Testing with Snyk') {
             steps {
-                echo 'Running Snyk security scan...'
-                snykSecurity(
-                    snykInstallation: 'snyk@latest',
-                    snykTokenId: 'snyk-api-token',
-                    failOnIssues: false,
-                    monitorProjectOnBuild: true
-                )
+                withCredentials([string(credentialsId: 'snyk-api-token', variable: 'SNYK_TOKEN')]) {
+                    sh '''
+                        export SNYK_TOKEN=$SNYK_TOKEN
+                        snyk test --json > snyk-result.json || true
+                    '''
+                }
             }
         }
         stage('Build Angular App') {
