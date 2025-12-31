@@ -48,24 +48,29 @@ pipeline {
         stage('Parse Snyk Result') {
             steps {
                 script {
-                    if (!fileExists('snyk-result.json')) {
-                        error('❌ snyk-result.json not found')
-                    }
-
                     def result = readJSON file: 'snyk-result.json'
                     def vulns = result.vulnerabilities ?: []
 
                     echo "🔍 Total vulnerabilities: ${vulns.size()}"
 
+                    def grouped = vulns.groupBy { it.severity }
+                    grouped.each { sev, list ->
+                        echo " - ${sev?.toUpperCase() ?: 'UNKNOWN'}: ${list.size()}"
+                    }
+
                     def highCritical = vulns.findAll {
                         it.severity in ['high', 'critical']
                     }
 
-                    echo "🔥 High/Critical: ${highCritical.size()}"
-
                     if (highCritical.size() > 0) {
-                        error('❌ Build failed due to High/Critical vulnerabilities')
+                        echo "❌ High/Critical vulnerabilities found:"
+                        highCritical.take(5).each {
+                            echo " - ${it.severity.toUpperCase()} | ${it.title}"
+                        }
+                        error("Build failed due to High/Critical vulnerabilities")
                     }
+
+                    echo "✅ No High/Critical vulnerabilities found"
                 }
             }
         }
