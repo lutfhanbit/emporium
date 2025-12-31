@@ -26,6 +26,14 @@ pipeline {
                 sh 'npm i'
             }
         }
+        stage('Install Snyk CLI') {
+            steps {
+                sh '''
+                    npm install -g snyk
+                    snyk --version
+                '''
+            }
+        }
         stage('Security Testing with Snyk') {
             steps {
                 withCredentials([string(credentialsId: 'snyk-cli-token', variable: 'SNYK_TOKEN')]) {
