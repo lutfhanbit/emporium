@@ -40,6 +40,7 @@ pipeline {
                     sh '''
                         export SNYK_TOKEN=$SNYK_TOKEN
                         snyk test --json > snyk-result.json || true
+                        ls -l snyk-result.json || true
                     '''
                 }
             }
