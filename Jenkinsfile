@@ -44,6 +44,30 @@ pipeline {
                 }
             }
         }
+        stage('Parse Snyk Result') {
+            steps {
+                script {
+                    if (!fileExists('snyk-result.json')) {
+                        error('❌ snyk-result.json not found')
+                    }
+
+                    def result = readJSON file: 'snyk-result.json'
+                    def vulns = result.vulnerabilities ?: []
+
+                    echo "🔍 Total vulnerabilities: ${vulns.size()}"
+
+                    def highCritical = vulns.findAll {
+                        it.severity in ['high', 'critical']
+                    }
+
+                    echo "🔥 High/Critical: ${highCritical.size()}"
+
+                    if (highCritical.size() > 0) {
+                        error('❌ Build failed due to High/Critical vulnerabilities')
+                    }
+                }
+            }
+        }
         stage('Build Angular App') {
             steps {
                 sh 'ng build --configuration=production'
