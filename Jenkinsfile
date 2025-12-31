@@ -28,7 +28,7 @@ pipeline {
         }
         stage('Security Testing with Snyk') {
             steps {
-                withCredentials([string(credentialsId: 'snyk-api-token', variable: 'SNYK_TOKEN')]) {
+                withCredentials([string(credentialsId: 'snyk-cli-token', variable: 'SNYK_TOKEN')]) {
                     sh '''
                         export SNYK_TOKEN=$SNYK_TOKEN
                         snyk test --json > snyk-result.json || true
