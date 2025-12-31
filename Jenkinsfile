@@ -34,7 +34,7 @@ pipeline {
                 '''
             }
         }
-        stage('Security Testing with Snyk') {
+        stage('Security Testing with Snyk CLI') {
             steps {
                 withCredentials([string(credentialsId: 'snyk-cli-token', variable: 'SNYK_TOKEN')]) {
                     sh '''
@@ -43,6 +43,17 @@ pipeline {
                         ls -l snyk-result.json || true
                     '''
                 }
+            }
+        }
+        stage('Security Testing with Snyk with Reporting') {
+            steps {
+                echo 'Running Snyk security scan...'
+                snykSecurity(
+                    snykInstallation: 'snyk@latest',
+                    snykTokenId: 'snyk-api-token',
+                    failOnIssues: false,
+                    monitorProjectOnBuild: true
+                )
             }
         }
         stage('Parse Snyk Result') {
