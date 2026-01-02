@@ -1,3 +1,3 @@
 kustomize:
   images:
-  - lutfhanbit/emporium:31
+  - lutfhanbit/emporium:35
