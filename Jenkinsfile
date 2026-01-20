@@ -10,7 +10,7 @@ pipeline {
         BUILD_DIR = 'dist/browser'  // Output folder after Angular build
         DEPLOY_DIR = 'app/html' // Target directory for deployment
         DOCKER_IMAGE = 'lutfhanbit/emporium'
-        DOCKER_TAG   = "${BUILD_NUMBER}"
+        DOCKER_TAG   = "dev.v${BUILD_NUMBER}"
         // DOCKER_TAG   = '13'
     }
     stages {
