@@ -1,3 +1,3 @@
 kustomize:
   images:
-  - lutfhanbit/emporium:dev.v42
+  - lutfhanbit/emporium:dev.v43
