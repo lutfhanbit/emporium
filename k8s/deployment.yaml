@@ -12,15 +12,10 @@ spec:
       labels:
         app: emporium
     spec:
+      imagePullSecrets:
+        - name: docker-hub-creds
       containers:
         - name: emporium
-          image: lutfhanbit/emporium:24
-          resources:
-            requests:
-              memory: "64Mi"
-              cpu: "30m"
-            limits:
-              memory: "2048Mi"
-              cpu: "1"
+          image: lutfhanbit/emporium:dev.v51
           ports:
             - containerPort: 80
